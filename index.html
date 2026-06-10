@@ -126,7 +126,6 @@ th{
     <input type="text" id="categoria" placeholder="Categoría" required>
 
     <input type="number" id="stock" placeholder="Stock" required>
-    <input type="number" id="stockMinimo" placeholder="Stock mínimo" required>
 
     <input type="number" id="compra" placeholder="Precio Compra" required>
 
@@ -137,7 +136,7 @@ th{
     </button>
 
 </form>
-    
+
 <table>
 
 <thead>
@@ -149,7 +148,6 @@ th{
 <th>Compra</th>
 <th>Venta</th>
 <th>Ganancia</th>
-<th>Estado</th>
 <th>Acciones</th>
 </tr>
 </thead>
@@ -164,8 +162,6 @@ th{
 
 let productos =
 JSON.parse(localStorage.getItem("inventario_v202")) || [];
-    stockMinimo:
-Number(document.getElementById("stockMinimo").value)
 
 let editando = null;
 
@@ -190,10 +186,6 @@ form.addEventListener("submit", function(e){
 
         stock:
         Number(document.getElementById("stock").value),
-
-        stockMinimo:
-        Number(document.getElementById("stockMinimo").value),
-
 
         compra:
         Number(document.getElementById("compra").value),
@@ -246,17 +238,13 @@ function editar(indice){
 
 function eliminar(indice){
 
-async function eliminar(id){
-
     if(confirm("¿Eliminar producto?")){
 
-        await deleteDoc(
-            doc(db, "productos", id)
-        );
+        productos.splice(indice,1);
+        guardar();
 
     }
 
-}
 }
 
 function render(){
@@ -271,14 +259,11 @@ function render(){
 
     productos.forEach((p,i)=>{
 
-let estado = "🟢 Disponible";
+        valorInventario +=
+        p.stock * p.compra;
 
-if(p.stock === 0){
-    estado = "🔴 Agotado";
-}
-else if(p.stock <= p.stockMinimo){
-    estado = "🟡 Reponer";
-}
+        gananciaPotencial +=
+        p.stock * (p.venta - p.compra);
 
         tabla.innerHTML += `
         <tr>
@@ -289,7 +274,6 @@ else if(p.stock <= p.stockMinimo){
             <td>$${p.compra}</td>
             <td>$${p.venta}</td>
             <td>$${p.venta-p.compra}</td>
-            <td>${estado}</td>
             <td>
                 <button class="btn-editar"
                     onclick="editar(${i})">
@@ -297,7 +281,7 @@ else if(p.stock <= p.stockMinimo){
                 </button>
 
                 <button class="btn-eliminar"
-                    onclick="eliminar('${p.id}')"
+                    onclick="eliminar(${i})">
                     🗑️
                 </button>
             </td>
@@ -316,82 +300,10 @@ else if(p.stock <= p.stockMinimo){
     .textContent = "$" + gananciaPotencial;
 
 }
-buscador.addEventListener(
-"input",
-render
-);
+
 render();
-const textoBusqueda =
-buscador.value.toLowerCase();
-productos
-.filter(p =>
 
-    p.nombre.toLowerCase()
-    .includes(textoBusqueda)
-
-    ||
-
-    p.codigo.toLowerCase()
-    .includes(textoBusqueda)
-
-    ||
-
-    p.categoria.toLowerCase()
-    .includes(textoBusqueda)
-
-)
-.forEach((p,i)=>{
-    
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-
-import {
-getFirestore,
-collection,
-addDoc,
-onSnapshot,
-deleteDoc,
-doc
-}
-from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBCkwEpfOmtWAYk-6JvZ_gKZBdMulSvVX4",
-  authDomain: "inventario-pro-d630b.firebaseapp.com",
-  projectId: "inventario-pro-d630b",
-  storageBucket: "inventario-pro-d630b.firebasestorage.app",
-  messagingSenderId: "463769411915",
-  appId: "1:463769411915:web:a098d425bc00f28a3548ce"
-};
-
-const app = initializeApp(firebaseConfig);
-const productosRef = collection(db, "productos");
-    let productos = [];
-
-onSnapshot(productosRef, (snapshot) => {
-
-    productos = [];
-
-    snapshot.forEach((documento) => {
-
-        productos.push({
-            id: documento.id,
-            ...documento.data()
-        });
-
-    });
-
-    render();
-
-});
-
-window.db = db;
-window.collection = collection;
-window.addDoc = addDoc;
-window.onSnapshot = onSnapshot;
-window.deleteDoc = deleteDoc;
-window.doc = doc;
+</script>
 
 </body>
 </html>
