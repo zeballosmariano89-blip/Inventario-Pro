@@ -137,18 +137,7 @@ th{
     </button>
 
 </form>
-    <input
-type="text"
-id="buscador"
-placeholder="🔍 Buscar por nombre, código o categoría..."
-style="
-width:100%;
-padding:10px;
-margin-bottom:15px;
-border-radius:5px;
-border:1px solid #ccc;
-">
-
+    
 <table>
 
 <thead>
@@ -207,8 +196,8 @@ Number(document.getElementById("stock").value),
 stockMinimo:
 Number(document.getElementById("stockMinimo").value),
 
-compra:
-Number(document.getElementById("compra").value),
+        compra:
+        Number(document.getElementById("compra").value),
 
         venta:
         Number(document.getElementById("venta").value)
@@ -221,8 +210,8 @@ Number(document.getElementById("compra").value),
         editando = null;
 
     }else{
-
-   await addDoc(productosRef, producto);
+     productos.push(producto);
+        await addDoc(productosRef, producto);
 
     }
 
