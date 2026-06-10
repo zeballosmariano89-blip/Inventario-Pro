@@ -149,6 +149,7 @@ th{
 <th>Compra</th>
 <th>Venta</th>
 <th>Ganancia</th>
+<th>Estado</th>
 <th>Acciones</th>
 </tr>
 </thead>
@@ -265,11 +266,14 @@ function render(){
 
     productos.forEach((p,i)=>{
 
-        valorInventario +=
-        p.stock * p.compra;
+        let estado = "🟢 Disponible";
 
-        gananciaPotencial +=
-        p.stock * (p.venta - p.compra);
+if(p.stock === 0){
+    estado = "🔴 Agotado";
+}
+else if(p.stock <= p.stockMinimo){
+    estado = "🟡 Reponer";
+}
 
         tabla.innerHTML += `
         <tr>
