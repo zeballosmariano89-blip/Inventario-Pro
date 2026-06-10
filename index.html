@@ -266,7 +266,7 @@ function render(){
 
     productos.forEach((p,i)=>{
 
-        let estado = "🟢 Disponible";
+let estado = "🟢 Disponible";
 
 if(p.stock === 0){
     estado = "🔴 Agotado";
@@ -284,6 +284,7 @@ else if(p.stock <= p.stockMinimo){
             <td>$${p.compra}</td>
             <td>$${p.venta}</td>
             <td>$${p.venta-p.compra}</td>
+            <td>${estado}</td>
             <td>
                 <button class="btn-editar"
                     onclick="editar(${i})">
