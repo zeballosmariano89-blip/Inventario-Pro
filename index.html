@@ -324,11 +324,13 @@ else if(p.stock <= p.stockMinimo){
     .textContent = "$" + gananciaPotencial;
 
 }
-
+buscador.addEventListener(
+"input",
+render
+);
 render();
 const textoBusqueda =
 buscador.value.toLowerCase();
-
 productos
 .filter(p =>
 
@@ -348,6 +350,5 @@ productos
 )
 .forEach((p,i)=>{
 </script>
-
 </body>
 </html>
