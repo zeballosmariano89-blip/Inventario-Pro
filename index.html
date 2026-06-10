@@ -137,6 +137,17 @@ th{
     </button>
 
 </form>
+    <input
+type="text"
+id="buscador"
+placeholder="🔍 Buscar por nombre, código o categoría..."
+style="
+width:100%;
+padding:10px;
+margin-bottom:15px;
+border-radius:5px;
+border:1px solid #ccc;
+">
 
 <table>
 
@@ -170,6 +181,8 @@ Number(document.getElementById("stockMinimo").value)
 let editando = null;
 
 const form = document.getElementById("productoForm");
+    const buscador =
+document.getElementById("buscador");
 
 form.addEventListener("submit", function(e){
 
@@ -313,7 +326,27 @@ else if(p.stock <= p.stockMinimo){
 }
 
 render();
+const textoBusqueda =
+buscador.value.toLowerCase();
 
+productos
+.filter(p =>
+
+    p.nombre.toLowerCase()
+    .includes(textoBusqueda)
+
+    ||
+
+    p.codigo.toLowerCase()
+    .includes(textoBusqueda)
+
+    ||
+
+    p.categoria.toLowerCase()
+    .includes(textoBusqueda)
+
+)
+.forEach((p,i)=>{
 </script>
 
 </body>
