@@ -126,6 +126,7 @@ th{
     <input type="text" id="categoria" placeholder="Categoría" required>
 
     <input type="number" id="stock" placeholder="Stock" required>
+    <input type="number" id="stockMinimo" placeholder="Stock mínimo" required>
 
     <input type="number" id="compra" placeholder="Precio Compra" required>
 
@@ -154,7 +155,11 @@ th{
 
 <tbody id="tablaProductos"></tbody>
 
-</table>
+</table><input
+type="text"
+id="buscador"
+placeholder="🔍 Buscar producto..."
+style="width:100%;margin-bottom:10px;">
 
 </div>
 
@@ -162,6 +167,8 @@ th{
 
 let productos =
 JSON.parse(localStorage.getItem("inventario_v202")) || [];
+    stockMinimo:
+Number(document.getElementById("stockMinimo").value)
 
 let editando = null;
 
