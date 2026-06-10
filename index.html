@@ -194,6 +194,7 @@ form.addEventListener("submit", function(e){
         stockMinimo:
         Number(document.getElementById("stockMinimo").value),
 
+
         compra:
         Number(document.getElementById("compra").value),
 
@@ -208,8 +209,8 @@ form.addEventListener("submit", function(e){
         editando = null;
 
     }else{
-     productos.push(producto);
-        await addDoc(productosRef, producto);
+
+        productos.push(producto);
 
     }
 
@@ -219,7 +220,7 @@ form.addEventListener("submit", function(e){
 });
 
 function guardar(){
-form.addEventListener("submit", async function(e){
+
     localStorage.setItem(
         "inventario_v202",
         JSON.stringify(productos)
@@ -230,7 +231,6 @@ form.addEventListener("submit", async function(e){
 }
 
 function editar(indice){
-    
 
     const p = productos[indice];
 
