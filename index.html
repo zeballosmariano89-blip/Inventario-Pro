@@ -222,7 +222,7 @@ Number(document.getElementById("compra").value),
 
     }else{
 
-        productos.push(producto);
+   await addDoc(productosRef, producto);
 
     }
 
@@ -232,7 +232,7 @@ Number(document.getElementById("compra").value),
 });
 
 function guardar(){
-
+form.addEventListener("submit", async function(e){
     localStorage.setItem(
         "inventario_v202",
         JSON.stringify(productos)
@@ -243,6 +243,7 @@ function guardar(){
 }
 
 function editar(indice){
+    
 
     const p = productos[indice];
 
@@ -258,13 +259,17 @@ function editar(indice){
 
 function eliminar(indice){
 
+async function eliminar(id){
+
     if(confirm("¿Eliminar producto?")){
 
-        productos.splice(indice,1);
-        guardar();
+        await deleteDoc(
+            doc(db, "productos", id)
+        );
 
     }
 
+}
 }
 
 function render(){
@@ -305,7 +310,7 @@ else if(p.stock <= p.stockMinimo){
                 </button>
 
                 <button class="btn-eliminar"
-                    onclick="eliminar(${i})">
+                    onclick="eliminar('${p.id}')"
                     🗑️
                 </button>
             </td>
@@ -374,7 +379,25 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const productosRef = collection(db, "productos");
+    let productos = [];
+
+onSnapshot(productosRef, (snapshot) => {
+
+    productos = [];
+
+    snapshot.forEach((documento) => {
+
+        productos.push({
+            id: documento.id,
+            ...documento.data()
+        });
+
+    });
+
+    render();
+
+});
 
 window.db = db;
 window.collection = collection;
