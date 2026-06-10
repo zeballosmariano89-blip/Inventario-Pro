@@ -350,5 +350,39 @@ productos
 )
 .forEach((p,i)=>{
 </script>
+    <script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+onSnapshot,
+deleteDoc,
+doc
+}
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBCkwEpfOmtWAYk-6JvZ_gKZBdMulSvVX4",
+  authDomain: "inventario-pro-d630b.firebaseapp.com",
+  projectId: "inventario-pro-d630b",
+  storageBucket: "inventario-pro-d630b.firebasestorage.app",
+  messagingSenderId: "463769411915",
+  appId: "1:463769411915:web:a098d425bc00f28a3548ce"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.db = db;
+window.collection = collection;
+window.addDoc = addDoc;
+window.onSnapshot = onSnapshot;
+window.deleteDoc = deleteDoc;
+window.doc = doc;
+
+</script>
 </body>
 </html>
