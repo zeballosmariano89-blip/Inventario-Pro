@@ -1,1 +1,306 @@
-https://zeballosmariano89-blip.github.io/Inventario-Pro/
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventario Pro V2.0.2</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    margin:0;
+    background:#f4f6f9;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+}
+
+h1{
+    color:#1f3b5b;
+}
+
+.dashboard{
+    display:flex;
+    gap:15px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+
+.card{
+    background:white;
+    padding:15px;
+    border-radius:8px;
+    flex:1;
+    min-width:200px;
+    box-shadow:0 2px 5px rgba(0,0,0,.1);
+}
+
+form{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:10px;
+    background:white;
+    padding:15px;
+    border-radius:8px;
+    margin-bottom:20px;
+}
+
+input, button{
+    padding:10px;
+}
+
+button{
+    cursor:pointer;
+    border:none;
+    border-radius:5px;
+}
+
+.btn-guardar{
+    background:#1f3b5b;
+    color:white;
+}
+
+.btn-editar{
+    background:#ffc107;
+}
+
+.btn-eliminar{
+    background:#dc3545;
+    color:white;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th, td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+}
+
+th{
+    background:#e9eef5;
+}
+
+@media(max-width:768px){
+    table{
+        font-size:12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📦 Inventario Pro V2.0.2</h1>
+
+<div class="dashboard">
+    <div class="card">
+        <h3>Total Productos</h3>
+        <h2 id="totalProductos">0</h2>
+    </div>
+
+    <div class="card">
+        <h3>Valor Inventario</h3>
+        <h2 id="valorInventario">$0</h2>
+    </div>
+
+    <div class="card">
+        <h3>Ganancia Potencial</h3>
+        <h2 id="gananciaPotencial">$0</h2>
+    </div>
+</div>
+
+<form id="productoForm">
+
+    <input type="text" id="nombre" placeholder="Producto" required>
+
+    <input type="text" id="categoria" placeholder="Categoría" required>
+
+    <input type="number" id="stock" placeholder="Stock" required>
+
+    <input type="number" id="compra" placeholder="Precio Compra" required>
+
+    <input type="number" id="venta" placeholder="Precio Venta" required>
+
+    <button class="btn-guardar" type="submit">
+        Guardar Producto
+    </button>
+
+</form>
+
+<table>
+
+<thead>
+<tr>
+<th>Código</th>
+<th>Producto</th>
+<th>Categoría</th>
+<th>Stock</th>
+<th>Compra</th>
+<th>Venta</th>
+<th>Ganancia</th>
+<th>Acciones</th>
+</tr>
+</thead>
+
+<tbody id="tablaProductos"></tbody>
+
+</table>
+
+</div>
+
+<script>
+
+let productos =
+JSON.parse(localStorage.getItem("inventario_v202")) || [];
+
+let editando = null;
+
+const form = document.getElementById("productoForm");
+
+form.addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    const producto = {
+
+        codigo:
+        editando !== null
+        ? productos[editando].codigo
+        : "P" + Date.now(),
+
+        nombre:
+        document.getElementById("nombre").value,
+
+        categoria:
+        document.getElementById("categoria").value,
+
+        stock:
+        Number(document.getElementById("stock").value),
+
+        compra:
+        Number(document.getElementById("compra").value),
+
+        venta:
+        Number(document.getElementById("venta").value)
+
+    };
+
+    if(editando !== null){
+
+        productos[editando] = producto;
+        editando = null;
+
+    }else{
+
+        productos.push(producto);
+
+    }
+
+    guardar();
+    form.reset();
+
+});
+
+function guardar(){
+
+    localStorage.setItem(
+        "inventario_v202",
+        JSON.stringify(productos)
+    );
+
+    render();
+
+}
+
+function editar(indice){
+
+    const p = productos[indice];
+
+    document.getElementById("nombre").value = p.nombre;
+    document.getElementById("categoria").value = p.categoria;
+    document.getElementById("stock").value = p.stock;
+    document.getElementById("compra").value = p.compra;
+    document.getElementById("venta").value = p.venta;
+
+    editando = indice;
+
+}
+
+function eliminar(indice){
+
+    if(confirm("¿Eliminar producto?")){
+
+        productos.splice(indice,1);
+        guardar();
+
+    }
+
+}
+
+function render(){
+
+    const tabla =
+    document.getElementById("tablaProductos");
+
+    tabla.innerHTML = "";
+
+    let valorInventario = 0;
+    let gananciaPotencial = 0;
+
+    productos.forEach((p,i)=>{
+
+        valorInventario +=
+        p.stock * p.compra;
+
+        gananciaPotencial +=
+        p.stock * (p.venta - p.compra);
+
+        tabla.innerHTML += `
+        <tr>
+            <td>${p.codigo}</td>
+            <td>${p.nombre}</td>
+            <td>${p.categoria}</td>
+            <td>${p.stock}</td>
+            <td>$${p.compra}</td>
+            <td>$${p.venta}</td>
+            <td>$${p.venta-p.compra}</td>
+            <td>
+                <button class="btn-editar"
+                    onclick="editar(${i})">
+                    ✏️
+                </button>
+
+                <button class="btn-eliminar"
+                    onclick="eliminar(${i})">
+                    🗑️
+                </button>
+            </td>
+        </tr>
+        `;
+
+    });
+
+    document.getElementById("totalProductos")
+    .textContent = productos.length;
+
+    document.getElementById("valorInventario")
+    .textContent = "$" + valorInventario;
+
+    document.getElementById("gananciaPotencial")
+    .textContent = "$" + gananciaPotencial;
+
+}
+
+render();
+
+</script>
