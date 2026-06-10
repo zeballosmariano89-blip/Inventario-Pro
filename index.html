@@ -170,8 +170,6 @@ Number(document.getElementById("stockMinimo").value)
 let editando = null;
 
 const form = document.getElementById("productoForm");
-    const buscador =
-document.getElementById("buscador");
 
 form.addEventListener("submit", function(e){
 
@@ -191,10 +189,10 @@ form.addEventListener("submit", function(e){
         document.getElementById("categoria").value,
 
         stock:
-Number(document.getElementById("stock").value),
+        Number(document.getElementById("stock").value),
 
-stockMinimo:
-Number(document.getElementById("stockMinimo").value),
+        stockMinimo:
+        Number(document.getElementById("stockMinimo").value),
 
         compra:
         Number(document.getElementById("compra").value),
